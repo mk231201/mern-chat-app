@@ -5,7 +5,7 @@ export const sendMessage = async (req, res) => {
   try {
     const { message } = req.body;
     const { id: receiverId } = req.params;
-    const senderId = req.user_id;
+    const senderId = req.user._id;
 
     let conversation = await Conversation.findOne({
       participants: { $all: [senderId, receiverId] },
@@ -28,7 +28,7 @@ export const sendMessage = async (req, res) => {
 
     //await conversation.save();
     //await newMessage.save();
-    new Promise.all([conversation.save(), newMessage.save()]);
+    await Promise.all([conversation.save(), newMessage.save()]);
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("Error in sendMessage controller:", error.message);
